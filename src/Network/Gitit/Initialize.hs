@@ -53,6 +53,7 @@ initializeGititState conf = do
   let userFile' = userFile conf
       pluginModules' = pluginModules conf
   plugins' <- loadPlugins pluginModules'
+  let plugins'' = plugins' ++ compiledPlugins
 
   userFileExists <- doesFileExist userFile'
   users' <- if userFileExists
@@ -65,7 +66,7 @@ initializeGititState conf = do
                              , users         = users'
                              , templatesPath = templatesDir conf
                              , renderPage    = defaultRenderPage templ
-                             , plugins       = plugins' }
+                             , plugins       = plugins'' }
 
 -- | Recompile the page template.
 recompilePageTemplate :: IO ()

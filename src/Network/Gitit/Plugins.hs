@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 {- Functions for loading plugins.
 -}
 
-module Network.Gitit.Plugins ( loadPlugin, loadPlugins )
+module Network.Gitit.Plugins ( loadPlugin, loadPlugins, compiledPlugins)
 where
 import Network.Gitit.Types
 import System.FilePath (takeBaseName)
@@ -31,6 +31,10 @@ import Data.List (isInfixOf, isPrefixOf)
 import GHC
 import GHC.Paths
 import Unsafe.Coerce
+
+-- Compiled plugins:
+import qualified Network.Gitit.Plugin.Interwiki as Interwiki
+import qualified Network.Gitit.Plugin.TikzCD as TikzCD
 
 loadPlugin :: FilePath -> IO Plugin
 loadPlugin pluginName = do
@@ -77,3 +81,9 @@ loadPlugins pluginNames = do
   unless (null pluginNames) $ logM "gitit" WARNING "Finished loading plugins."
   return plugins'
 
+compiledPlugins :: [Plugin]
+compiledPlugins =
+    [ TikzCD.plugin
+    , Interwiki.plugin
+    ]
+  
