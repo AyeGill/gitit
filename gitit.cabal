@@ -111,7 +111,7 @@ Flag plugins
   description:       Compile in support for plugins.  This will increase the size of
                      the executable and the memory it uses, so those who will not need
                      plugins should disable this flag.
-  default:           True
+  default:           False
 
 Library
   hs-source-dirs:    src
@@ -126,6 +126,8 @@ Library
                      Network.Gitit.Handlers,
                      Network.Gitit.Plugin.Interwiki,
                      Network.Gitit.Plugin.TikzCD,
+                     Network.Gitit.Plugin.MemomanNormal,
+                     Network.Gitit.Plugin.MemomanReview,
                      Network.Gitit.Plugins, Network.Gitit.Rpxnow,
                      Network.Gitit.Page, Network.Gitit.Feed,
                      Network.Gitit.Compat.Except,

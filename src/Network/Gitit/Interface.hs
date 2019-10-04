@@ -115,6 +115,7 @@ module Network.Gitit.Interface ( Plugin(..)
                                , askUser
                                , askRequest
                                , askFileStore
+                               , askFile
                                , askMeta
                                , doNotCache
                                , getContext
@@ -158,6 +159,10 @@ askFileStore = liftM pluginFileStore ask
 -- | Returns the page meta data
 askMeta :: PluginM [(String, String)]
 askMeta = liftM ctxMeta getContext
+
+-- | Returns the current page file name
+askFile :: PluginM String
+askFile = liftM ctxFile getContext
 
 -- | Indicates that the current page or file is not to be cached.
 doNotCache :: PluginM ()

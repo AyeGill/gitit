@@ -35,6 +35,8 @@ import Unsafe.Coerce
 -- Compiled plugins:
 import qualified Network.Gitit.Plugin.Interwiki as Interwiki
 import qualified Network.Gitit.Plugin.TikzCD as TikzCD
+import qualified Network.Gitit.Plugin.MemomanNormal as Memoman
+
 
 loadPlugin :: FilePath -> IO Plugin
 loadPlugin pluginName = do
@@ -85,5 +87,6 @@ compiledPlugins :: [Plugin]
 compiledPlugins =
     [ TikzCD.plugin
     , Interwiki.plugin
+    , Memoman.plugin
     ]
   

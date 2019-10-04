@@ -55,7 +55,7 @@ transformBlock (CodeBlock (_, classes, namevals) contents)
     system $ "latex " ++ outfile ++ ".tex > /dev/null" --cut /dev/null to debug
     setCurrentDirectory curr
     system $ "dvisvgm -n -e " ++
-              (tmpdir </> outfile <.> "dvi") ++ " -o " ++ (staticDir cfg </> "img" </> outfile)
+        (tmpdir </> outfile <.> "dvi") ++ " -o " ++ (staticDir cfg </> "img" </> outfile) ++ " > /dev/null"
     return $ Para [Image nullAttr name ("/img" </> outfile, "")]
 transformBlock x = return x
 
