@@ -36,7 +36,9 @@ import Unsafe.Coerce
 import qualified Network.Gitit.Plugin.Interwiki as Interwiki
 import qualified Network.Gitit.Plugin.TikzCD as TikzCD
 import qualified Network.Gitit.Plugin.MemomanNormal as Memoman
-
+import qualified Network.Gitit.Plugin.DeadlinkDetection as DeadlinkDetection
+import qualified Network.Gitit.Plugin.MemoCreate as MemoCreate
+import qualified Network.Gitit.Plugin.TestSavePlugin as TestSavePlugin
 
 loadPlugin :: FilePath -> IO Plugin
 loadPlugin pluginName = do
@@ -86,7 +88,9 @@ loadPlugins pluginNames = do
 compiledPlugins :: [Plugin]
 compiledPlugins =
     [ TikzCD.plugin
+    , DeadlinkDetection.plugin
     , Interwiki.plugin
-    , Memoman.plugin
+    , TestSavePlugin.plugin
+    , MemoCreate.plugin
     ]
   

@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 module Network.Gitit.Handlers (
                         handleAny
                       , debugHandler
+                      , fooHandler
                       , randomPage
                       , discussPage
                       , createPage
@@ -134,6 +135,7 @@ createPage :: Handler
 createPage = do
   page <- getPage
   base' <- getWikiBase
+  existing <- withData (\params -> findResults $ params {pPatterns = [page]})
   case page of
        ('_':_) -> mzero   -- don't allow creation of _index, etc.
        _       -> formattedPage defaultPageLayout{
@@ -152,8 +154,13 @@ createPage = do
                             [href $ base' ++ "/_search?" ++
                                 (urlEncodeVars [("patterns", page)])] <<
                               ("Search for pages containing the text '" ++
-                                page ++ "'")])
+                                page ++ "'")
+                      , existing])
 
+fooHandler :: Handler
+fooHandler = do
+    formattedPage defaultPageLayout $ (p << stringToHtml "FooBarBazQuux")
+                            
 uploadForm :: Handler
 uploadForm = withData $ \(params :: Params) -> do
   let origPath = pFilename params
@@ -265,54 +272,59 @@ goToPage = withData $ \(params :: Params) -> do
                                                     " to partial match"
                                        Nothing -> searchResults
 
+findResults :: Params -> ServerPartT (ReaderT WikiState IO) Html
+findResults params = do
+    let patterns = pPatterns params `orIfNull` [pGotoPage params]
+    fs <- getFileStore
+    matchLines <- if null patterns
+                     then return []
+                     else liftIO $ E.catch (search fs SearchQuery{
+                                                    queryPatterns = patterns
+                                                  , queryWholeWords = True
+                                                  , queryMatchAll = True
+                                                  , queryIgnoreCase = True })
+                                         -- catch error, because newer versions of git
+                                         -- return 1 on no match, and filestore <=0.3.3
+                                         -- doesn't handle this properly:
+                                         (\(_ :: FileStoreError)  -> return [])
+    let contentMatches = map matchResourceName matchLines
+    allPages <- liftIO (index fs) >>= filterM isPageFile
+    let slashToSpace = map (\c -> if c == '/' then ' ' else c)
+    let inPageName pageName' x = x `elem` (words $ slashToSpace $ dropExtension pageName')
+    let matchesPatterns pageName' = not (null patterns) &&
+         all (inPageName (map toLower pageName')) (map (map toLower) patterns)
+    let pageNameMatches = filter matchesPatterns allPages
+    prunedFiles <- filterM isPageFile (contentMatches ++ pageNameMatches)
+    let allMatchedFiles = nub $ prunedFiles
+    let matchesInFile f =  mapMaybe (\x -> if matchResourceName x == f
+                                              then Just (matchLine x)
+                                              else Nothing) matchLines
+    let matches = map (\f -> (f, matchesInFile f)) allMatchedFiles
+    let relevance (f, ms) = length ms + if f `elem` pageNameMatches
+                                           then 100
+                                           else 0
+    let preamble = if null patterns
+                      then h3 << ["Please enter a search term."]
+                      else h3 << [ stringToHtml (show (length matches) ++ " matches found for ")
+                                 , thespan ! [identifier "pattern"] << unwords patterns]
+    base' <- getWikiBase
+    let toMatchListItem (file, contents) = li <<
+          [ anchor ! [href $ base' ++ urlForPage (dropExtension file)] << dropExtension file
+          , stringToHtml (" (" ++ show (length contents) ++ " matching lines)")
+          , stringToHtml " "
+          , anchor ! [href "#", theclass "showmatch",
+                      thestyle "display: none;"] << if length contents > 0
+                                                       then "[show matches]"
+                                                       else ""
+          , pre ! [theclass "matches"] << unlines contents]
+    let htmlMatches = preamble +++
+                      olist << map toMatchListItem
+                               (reverse $ sortBy (comparing relevance) matches)
+    return htmlMatches
+
 searchResults :: Handler
 searchResults = withData $ \(params :: Params) -> do
-  let patterns = pPatterns params `orIfNull` [pGotoPage params]
-  fs <- getFileStore
-  matchLines <- if null patterns
-                   then return []
-                   else liftIO $ E.catch (search fs SearchQuery{
-                                                  queryPatterns = patterns
-                                                , queryWholeWords = True
-                                                , queryMatchAll = True
-                                                , queryIgnoreCase = True })
-                                       -- catch error, because newer versions of git
-                                       -- return 1 on no match, and filestore <=0.3.3
-                                       -- doesn't handle this properly:
-                                       (\(_ :: FileStoreError)  -> return [])
-  let contentMatches = map matchResourceName matchLines
-  allPages <- liftIO (index fs) >>= filterM isPageFile
-  let slashToSpace = map (\c -> if c == '/' then ' ' else c)
-  let inPageName pageName' x = x `elem` (words $ slashToSpace $ dropExtension pageName')
-  let matchesPatterns pageName' = not (null patterns) &&
-       all (inPageName (map toLower pageName')) (map (map toLower) patterns)
-  let pageNameMatches = filter matchesPatterns allPages
-  prunedFiles <- filterM isPageFile (contentMatches ++ pageNameMatches)
-  let allMatchedFiles = nub $ prunedFiles
-  let matchesInFile f =  mapMaybe (\x -> if matchResourceName x == f
-                                            then Just (matchLine x)
-                                            else Nothing) matchLines
-  let matches = map (\f -> (f, matchesInFile f)) allMatchedFiles
-  let relevance (f, ms) = length ms + if f `elem` pageNameMatches
-                                         then 100
-                                         else 0
-  let preamble = if null patterns
-                    then h3 << ["Please enter a search term."]
-                    else h3 << [ stringToHtml (show (length matches) ++ " matches found for ")
-                               , thespan ! [identifier "pattern"] << unwords patterns]
-  base' <- getWikiBase
-  let toMatchListItem (file, contents) = li <<
-        [ anchor ! [href $ base' ++ urlForPage (dropExtension file)] << dropExtension file
-        , stringToHtml (" (" ++ show (length contents) ++ " matching lines)")
-        , stringToHtml " "
-        , anchor ! [href "#", theclass "showmatch",
-                    thestyle "display: none;"] << if length contents > 0
-                                                     then "[show matches]"
-                                                     else ""
-        , pre ! [theclass "matches"] << unlines contents]
-  let htmlMatches = preamble +++
-                    olist << map toMatchListItem
-                             (reverse $ sortBy (comparing relevance) matches)
+  htmlMatches <- findResults params
   formattedPage defaultPageLayout{
                   pgMessages = pMessages params,
                   pgShowPageTools = False,
@@ -616,6 +628,7 @@ deletePage = withData $ \(params :: Params) -> do
        seeOther (base' ++ "/") $ toResponse $ p << "File deleted"
      else seeOther (base' ++ urlForPage page) $ toResponse $ p << "Not deleted"
 
+    
 updatePage :: Handler
 updatePage = withData $ \(params :: Params) -> do
   page <- getPage
@@ -663,6 +676,8 @@ updatePage = withData $ \(params :: Params) -> do
                          pSHA1       = revId mergedWithRev,
                          pMessages   = [mergeMsg] }
 
+
+-- TODO: Remove Memo pages here in addition to discussion pages
 indexPage :: Handler
 indexPage = do
   path' <- getPath
