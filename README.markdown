@@ -35,6 +35,6 @@ In my `.cabal` file, I've disabled the ordinary plugin support by default as wel
 ## Process to duplicate my setup
 
 - Use this
-- Use gitit bootstrap(find link)
+- Use [gitit-bootstrap-theme](https://github.com/t13a/gitit-bootstrap-theme)
 - Put TeX commands into the `content.st` template, in a `display: none` div right over `$content$`.
 - Put `.deadlink {color: red;}` into `static/custom.css` (if you want to tag dead links).
