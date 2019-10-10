@@ -51,7 +51,7 @@ In my `.cabal` file, I've disabled the ordinary plugin support by default as wel
 - Install ace editor into `/static/js/ace-builds/`
   - Put this code into `page.st` at the top with the other includes:
     `<script type="text/javascript" src="$base$/js/ace-builds/src-noconflict/ace.js"></script>`
-- And this at the bottom below the actual content.
+  - And this at the bottom below the actual content.
 ```
 <script>
 \$(document).ready(function() {
