@@ -9,15 +9,10 @@ import Network.Gitit.Interface
 import Network.Gitit.Framework (filestoreFromConfig)
 
 import Data.List (isPrefixOf)
-import Data.List.Utils (split, join)
+import Data.List.Utils (split, join, replace)
 
 plugin :: Plugin
 plugin = mkPageTransformM alterLink
-
-replace :: Eq a => [a] -> [a] -> [a] -> [a]
-replace old new = join new . split old
-
--- Stolen from missingH
 
 -- Check if a link is an internal wiki link or not, call deadenLink if it is
 alterLink :: Inline -> PluginM Inline

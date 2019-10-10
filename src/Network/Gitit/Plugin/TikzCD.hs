@@ -52,7 +52,7 @@ transformBlock (CodeBlock (_, classes, namevals) contents)
   liftIO $ withTempDir "gitit-imgtex" $ \tmpdir -> do
     setCurrentDirectory tmpdir
     writeFile (outfile ++ ".tex") (templateHeader ++ contents ++ templateFooter)
-    system $ "latex " ++ outfile ++ ".tex > /dev/null" --cut /dev/null to debug
+    system $ "latex " ++ outfile ++ ".tex" --find a solution to display error if diagram is fucked.
     setCurrentDirectory curr
     system $ "dvisvgm -n -e " ++
         (tmpdir </> outfile <.> "dvi") ++ " -o " ++ (staticDir cfg </> "img" </> outfile) ++ " > /dev/null"

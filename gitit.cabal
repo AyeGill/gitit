@@ -131,11 +131,13 @@ Library
                      Network.Gitit.Plugin.MemoCreate,
                      Network.Gitit.Plugin.DeadlinkDetection,
                      Network.Gitit.Plugin.TestSavePlugin,
+                     Network.Gitit.Plugin.Backlinks,
                      Network.Gitit.Plugins, Network.Gitit.Rpxnow,
                      Network.Gitit.Page, Network.Gitit.Feed,
                      Network.Gitit.Compat.Except,
                      Paths_gitit
   build-depends:     base >= 4.9 && < 5,
+                     aeson,
                      MissingH,
                      syb,
                      filepath,

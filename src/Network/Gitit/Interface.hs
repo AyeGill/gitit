@@ -117,6 +117,7 @@ module Network.Gitit.Interface ( Plugin(..)
                                , askFileStore
                                , askFile
                                , askMeta
+                               , askLayout
                                , doNotCache
                                , getContext
                                , modifyContext
@@ -164,6 +165,8 @@ askMeta = liftM ctxMeta getContext
 askFile :: PluginM String
 askFile = liftM ctxFile getContext
 
+askLayout :: PluginM PageLayout
+askLayout = liftM ctxLayout getContext
 -- | Indicates that the current page or file is not to be cached.
 doNotCache :: PluginM ()
 doNotCache = modifyContext (\ctx -> ctx{ ctxCacheable = False })

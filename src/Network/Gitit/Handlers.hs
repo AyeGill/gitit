@@ -542,7 +542,8 @@ editPage' params = do
                           strAttr "style" "color: gray"]
                     else []
   base' <- getWikiBase
-  let editForm = gui (base' ++ urlForPage page) ! [identifier "editform"] <<
+  let editForm =  thediv ! [identifier "editor"] << "" +++ 
+                    gui (base' ++ urlForPage page) ! [identifier "editform"] <<
                    [ sha1Box
                    , textarea ! (readonly ++ [cols "80", name "editedText",
                                   identifier "editedText"]) << raw

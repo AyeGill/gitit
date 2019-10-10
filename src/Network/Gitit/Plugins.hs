@@ -39,6 +39,7 @@ import qualified Network.Gitit.Plugin.MemomanNormal as Memoman
 import qualified Network.Gitit.Plugin.DeadlinkDetection as DeadlinkDetection
 import qualified Network.Gitit.Plugin.MemoCreate as MemoCreate
 import qualified Network.Gitit.Plugin.TestSavePlugin as TestSavePlugin
+import qualified Network.Gitit.Plugin.Backlinks as Backlinks
 
 loadPlugin :: FilePath -> IO Plugin
 loadPlugin pluginName = do
@@ -92,5 +93,6 @@ compiledPlugins =
     , Interwiki.plugin
     , TestSavePlugin.plugin
     , MemoCreate.plugin
+    , Backlinks.plugin
     ]
   
