@@ -52,17 +52,19 @@ In my `.cabal` file, I've disabled the ordinary plugin support by default as wel
   - Put this code into `page.st` at the top with the other includes:
     `<script type="text/javascript" src="$base$/js/ace-builds/src-noconflict/ace.js"></script>`
   - And this at the bottom below the actual content.
-```
+
+```javascript
 <script>
 \$(document).ready(function() {
         var editor = ace.edit("editor", {
             theme: "ace/theme/tomorrow_night_blue",
             mode: "ace/mode/markdown",
             autoScrollEditorIntoView: true,
-            maxLines: 30,
-            minLines: 2
+            maxLines: 60,
+            minLines: 30
         });
         editor.setReadOnly(false);
+        editor.setFontSize(14);
         var textarea = \$('textarea#editedText').hide();
         editor.getSession().setValue(textarea.val());
         editor.getSession().on('change', function(){
@@ -71,3 +73,5 @@ In my `.cabal` file, I've disabled the ordinary plugin support by default as wel
     });
 </script>
 ```
+
+(Obviously you can fiddle with the settings for ace editor).
