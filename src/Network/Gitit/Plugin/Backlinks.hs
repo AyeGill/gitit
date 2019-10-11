@@ -26,6 +26,7 @@ plugin = mkPageTransformM doBacklinks
 
 doBacklinks :: Pandoc -> PluginM Pandoc
 doBacklinks document = do
+    askFileStore >>= (liftIO . ensureBl)
     updateBacklinks document
     addBacklinks document
 
@@ -95,7 +96,6 @@ ensureBl filestore = do
 readBacklinks :: String -> PluginM [String]
 readBacklinks title = do
     filestore <- askFileStore
-    liftIO $ ensureBl filestore
     raw <- liftIO $ retrieve filestore blfile Nothing
     let linkList = case decode raw of
             Nothing -> [] :: [(String, [String])]

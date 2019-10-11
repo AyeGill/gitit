@@ -23,7 +23,8 @@ In my `.cabal` file, I've disabled the ordinary plugin support by default as wel
 ### Other features
 
 - When creating a new page, displays search results for that page.
-- I add an empty `<div>` to the edit pages so you can use Ace Editor.
+- Replace the standard editing with Ace Editor.
+- Bake [gitit-bootstrap-theme](https://github.com/t13a/gitit-bootstrap-theme) in.
 
 ## Planned features
 
@@ -43,6 +44,8 @@ In my `.cabal` file, I've disabled the ordinary plugin support by default as wel
 - `updatePage` seems to have the code for adding pages.
 
 ## Process to duplicate my setup
+
+!! This should now be obsolete - this has been integrated into the code. Preserved for posterity !!
 
 - Use this
 - Use [gitit-bootstrap-theme](https://github.com/t13a/gitit-bootstrap-theme)
