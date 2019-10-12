@@ -1,5 +1,7 @@
 See [jgm/gitit](https://github.com/jgm/gitit) for info on `gitit`
 
+## Plugins
+
 In this fork, I've added code to compile certain plugins, rather than loading them at compile time.
 These are placed in `src/Network/Gitit/Plugin/`, and put into the `compiledPlugins` list in `Plugins.hs`
 This structure was shamelessly stolen from [Jeff Johnson's fork](https://github.com/jefdaj/gitit).
@@ -20,12 +22,13 @@ In my `.cabal` file, I've disabled the ordinary plugin support by default as wel
   - Similar to deadlinks, if you use the cache, the list of backlinks is only updated when the page is rebuilt.
   - Also tracks dead internal links ("magic links") - this shouldn't cause issues.
 
-### Other features
+## Other features
 
 - When creating a new page, displays search results for that page.
 - Replace the standard editing with Ace Editor.
 - Bake [gitit-bootstrap-theme](https://github.com/t13a/gitit-bootstrap-theme) in.
-
+- To build using Docker, (for instance, for running on AWS Electric Beanstalk), uncomment the commented lines in `stack.yaml`.
+  
 ## Planned features
 
 - A spaced-repetition memory system, where one uses commands embedded into pages to generate cards.
