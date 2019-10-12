@@ -27,8 +27,7 @@ In my `.cabal` file, I've disabled the ordinary plugin support by default as wel
 - When creating a new page, displays search results for that page.
 - Replace the standard editing with Ace Editor.
 - Bake [gitit-bootstrap-theme](https://github.com/t13a/gitit-bootstrap-theme) in.
-- To build using Docker, (for instance, for running on AWS Electric Beanstalk), uncomment the commented lines in `stack.yaml`.
-  
+
 ## Planned features
 
 - A spaced-repetition memory system, where one uses commands embedded into pages to generate cards.
