@@ -74,6 +74,16 @@ data-files:          data/static/css/*.css,
                      data/s5/default/*.js,
                      data/s5/default/*.min.js,
                      data/post-update,
+                     data/default.conf,
+                     data/FrontPage.page,
+                     data/Help.page,
+                     data/markup.DocBook,
+                     data/markup.Markdown,
+                     data/markup.HTML,
+                     data/markup.LaTeX,
+                     data/markup.Org,
+                     data/markup.RST,
+                     data/markup.Textile,
                      CHANGES, README.markdown, YUI-LICENSE, BLUETRIP-LICENSE, TANGOICONS
 
 Source-repository head

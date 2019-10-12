@@ -198,10 +198,10 @@ createStaticIfMissing conf = do
       logM "gitit" WARNING $ "Created " ++ (icondir </> f)
     -}
 
-    logopath <- getDataFileName $ "data" </> "static" </> "img" </> "logo.png"
+    logopath <- getDataFileName $ "data" </> "static" </> "img" </> "logo.svg"
     createDirectoryIfMissing True $ staticdir </> "img"
-    copyFile logopath $ staticdir </> "img" </> "logo.png"
-    logM "gitit" WARNING $ "Created " ++ (staticdir </> "img" </> "logo.png")
+    copyFile logopath $ staticdir </> "img" </> "logo.svg"
+    logM "gitit" WARNING $ "Created " ++ (staticdir </> "img" </> "logo.svg")
 
     {-
     let jsdir = staticdir </> "js"

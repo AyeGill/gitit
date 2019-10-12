@@ -22,3 +22,4 @@ resolver: lts-12.4
 docker:
  enable: true
  repo: fpco/stack-build
+ mount:
