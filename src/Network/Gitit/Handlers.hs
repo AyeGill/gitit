@@ -51,6 +51,7 @@ module Network.Gitit.Handlers (
                       , showHighlightedSource
                       , expireCache
                       , feedHandler
+                      , todayPage
                       )
 where
 import Safe
@@ -270,7 +271,8 @@ goToPage = withData $ \(params :: Params) -> do
                                        Just m  -> seeOther (base' ++ urlForPage m) $
                                                   toResponse $ "Redirecting" ++
                                                     " to partial match"
-                                       Nothing -> searchResults
+                                       Nothing -> seeOther (base' ++ urlForPage gotopage) $ 
+                                                  toResponse $ "Redirecting to nonexistent page"
 
 findResults :: Params -> ServerPartT (ReaderT WikiState IO) Html
 findResults params = do
@@ -323,9 +325,12 @@ findResults params = do
     return htmlMatches
 
 searchResults :: Handler
-searchResults = withData $ \(params :: Params) -> do
+searchResults = withData $ searchResults'
+
+searchResults' :: Params -> Handler
+searchResults' params = do
   htmlMatches <- findResults params
-  formattedPage defaultPageLayout{
+  formattedPage defaultPageLayout {
                   pgMessages = pMessages params,
                   pgShowPageTools = False,
                   pgTabs = [],
@@ -828,3 +833,10 @@ feedHandler = do
             resp' <- liftM toResponse $ liftIO (filestoreToXmlFeed fc fs mbPath)
             cacheContents file $ S.concat $ B.toChunks $ rsBody resp'
             ok . setContentType "application/atom+xml; charset=UTF-8" $ resp'
+
+todayPage :: Handler
+todayPage = do
+    now <- liftIO getCurrentTime
+    base' <- getWikiBase
+    let todayStr = show $ utctDay now
+    seeOther (base' ++ urlForPage todayStr) $ toResponse "redirecting to today's page"

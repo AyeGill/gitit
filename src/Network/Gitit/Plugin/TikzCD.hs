@@ -24,6 +24,7 @@ import Data.ByteString.Lazy.UTF8 (fromString)
 import Data.Digest.Pure.SHA
 import System.FilePath
 import Control.Monad.Trans (liftIO)
+import System.Log.Logger (logM, Priority(..))
 
 plugin :: Plugin
 plugin = mkPageTransformM transformBlock
@@ -44,6 +45,7 @@ templateFooter =
 transformBlock :: Block -> PluginM Block
 transformBlock (CodeBlock (_, classes, namevals) contents)
     | "tikzcd" `elem` classes = do
+  liftIO $ logM "gitit" DEBUG"compiling .tex image..."
   cfg <- askConfig
   let (name, outfile) =  case lookup "name" namevals of
                                 Just fn   -> ([Str fn], fn ++ ".svg")
