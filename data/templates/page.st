@@ -86,9 +86,12 @@ $getuser()$
             mode: "ace/mode/markdown",
             autoScrollEditorIntoView: true,
             minLines: 30,
-            maxLines: 60
+            maxLines: 60,
+            enableBasicAutocompletion: true
+
         });
         editor.setReadOnly(false);
+        editor.getSession().setUseWrapMode(true);
         editor.setFontSize(16);
         var textarea = \$('textarea#editedText').hide();
         editor.getSession().setValue(textarea.val());

@@ -200,6 +200,7 @@ wikiHandlers =
   , dir "_preview" preview
   , dir "_foo" fooHandler
   , dir "_today" todayPage
+  , dir "_memo" listMemoPage
   , guardIndex >> indexPage
   , guardCommand "export" >> exportPage
   , method POST >> guardCommand "cancel" >> showPage

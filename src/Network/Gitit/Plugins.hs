@@ -35,9 +35,8 @@ import Unsafe.Coerce
 -- Compiled plugins:
 import qualified Network.Gitit.Plugin.Interwiki as Interwiki
 import qualified Network.Gitit.Plugin.TikzCD as TikzCD
-import qualified Network.Gitit.Plugin.MemomanNormal as Memoman
+import qualified Network.Gitit.Plugin.Memo as Memo
 import qualified Network.Gitit.Plugin.DeadlinkDetection as DeadlinkDetection
-import qualified Network.Gitit.Plugin.MemoCreate as MemoCreate
 import qualified Network.Gitit.Plugin.TestSavePlugin as TestSavePlugin
 import qualified Network.Gitit.Plugin.Backlinks as Backlinks
 
@@ -88,11 +87,12 @@ loadPlugins pluginNames = do
 
 compiledPlugins :: [Plugin]
 compiledPlugins =
-    [ TikzCD.plugin
+    [ Memo.stdPlugin
+    , Memo.memoPlugin
+    , TikzCD.plugin
     , DeadlinkDetection.plugin
     , Interwiki.plugin
     , TestSavePlugin.plugin
-    , MemoCreate.plugin
     , Backlinks.plugin
     ]
   
