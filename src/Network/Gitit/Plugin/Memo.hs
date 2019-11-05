@@ -35,6 +35,7 @@ Clozes are built as [<text>](!cloze <tag>) - tag is optional.
 When loading memo page, a random tag is chosen and all those clozes are hidden.
 Untagged clozes are always hidden.
 Tags *must* be enclosed in quotation marks.
+You can put pretty much anything inside a cloze, including pictures.
 
 Q/A pairs are built by divs with the "question" class. The first block
 (usually the first paragraph) is the class. EG:
@@ -56,6 +57,14 @@ pick list = do
     idx <- liftIO $ randomRIO (0, length list - 1)
     return $ Just $ list !! idx
 
+extensions :: Extensions
+extensions = pandocExtensions
+
+options :: WriterOptions
+options = def {
+    writerExtensions = extensions
+}
+
 
 --- Make a page if it doesn't exist, or update it if it does.
 makePage :: String -> String -> Pandoc -> PluginM ()
@@ -64,7 +73,7 @@ makePage filename header pandoc = do
     filestore <- askFileStore
     idx <- liftIO $ index filestore
     let header' = "---\n"++ header ++ "\n...\n"
-    pdoutput <- liftIO $ runIO $ writeMarkdown def pandoc
+    pdoutput <- liftIO $ runIO $ writeMarkdown options pandoc
     liftIO $ putStrLn $ "Done w. markdown"
     case pdoutput of
         Left _ -> return () -- error - shouldn't happen.
