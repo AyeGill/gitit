@@ -10,7 +10,7 @@ See [this issue](https://github.com/jgm/gitit/issues/599).
 If you're using this approach, note that you need to add your plugins to exposed-modules in `gitit.cabal` (see mine for example).
 In my `.cabal` file, I've disabled the ordinary plugin support by default as well.
 
-- `TikzCD` - similar to the `ImgTex` plugin in `gitit`, but for the `tikz-cd` LaTeX package. Uses `dvisvgm`.
+- `TikzCD` - similar to the `ImgTex` plugin in `gitit`, but for the `tikz-cd` LaTeX package. Uses `dvisvgm`, which must be on your path.
   - This produces a metric fuckton of debug output. If running locally, use this to tell TeX to move on when your diagrams are broken.
 - The normal gitit `Interwiki` plugin (but fixed to carry around the attrs of the links - I think this is due to a new version of pandoc-types)
 - `DeadlinkDetection` - add the `deadlink` class to dead internal links (experimental, kind of a hack)
@@ -33,6 +33,11 @@ In my `.cabal` file, I've disabled the ordinary plugin support by default as wel
 - A spaced-repetition memory system, where one uses commands embedded into pages to generate cards.
 - Add debug output, or at least more graceful failures, to tikzcd.
 
+## Configuration notes
+
+- Go into `/data/templates/page.st` and mess with the script at the bottom to configure the editor.
+- As noted above, go into `Plugins.hs` and edit the list of compiled plugins to enable/disable some of them.
+
 ## Development notes to self
   
 - To avoid interfering with dead link tagger, any plugins that interpret weird links should have them start with `!`, like `[Text](!cmd ...)`
@@ -47,7 +52,7 @@ In my `.cabal` file, I've disabled the ordinary plugin support by default as wel
 
 ## Process to duplicate my setup
 
-!! This should now be obsolete - this has been integrated into the code. Preserved for posterity !!
+**!!This should now be obsolete - this has been integrated into the code. Preserved for posterity!!**
 
 - Use this
 - Use [gitit-bootstrap-theme](https://github.com/t13a/gitit-bootstrap-theme)

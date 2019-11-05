@@ -693,7 +693,7 @@ readerFor :: PageType -> Bool -> String -> Either PandocError Pandoc
 readerFor pt lhs =
   let defExts = getDefaultExtensions $ map toLower $ show pt
       defPS = def{ readerExtensions = defExts
-                                      <> extensionsFromList [Ext_emoji]
+                                      <> extensionsFromList [Ext_emoji, Ext_fenced_divs]
                                       <> getPageTypeDefaultExtensions pt lhs
                                       <> readerExtensions def }
   in runPure . (case pt of

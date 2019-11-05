@@ -52,6 +52,7 @@ module Network.Gitit.Handlers (
                       , expireCache
                       , feedHandler
                       , todayPage
+                      , listMemoPage
                       )
 where
 import Safe
@@ -83,6 +84,8 @@ import Data.Time (getCurrentTime, addUTCTime)
 import Data.Time.Clock (diffUTCTime, UTCTime(..))
 import Data.FileStore
 import System.Log.Logger (logM, Priority(..))
+
+
 
 handleAny :: Handler
 handleAny = withData $ \(params :: Params) -> uriRest $ \uri ->
@@ -840,3 +843,18 @@ todayPage = do
     base' <- getWikiBase
     let todayStr = show $ utctDay now
     seeOther (base' ++ urlForPage todayStr) $ toResponse "redirecting to today's page"
+
+listMemoPage :: Handler
+listMemoPage = do
+    fs <- getFileStore
+    memos <- map dropExtension . filter (\fp -> (reverse $ take 9 $ reverse fp) == "memo.page") <$> liftIO (index fs)
+    base' <- getWikiBase
+    let toLink page = li <<
+            [ anchor ! [href $ base' ++ urlForPage page] << page]
+    let htmlMatches = ulist << map toLink memos
+    formattedPage defaultPageLayout{
+                  pgPageName = "Memo pages:",
+                  pgShowPageTools = False,
+                  pgTabs = [],
+                  pgScripts = ["search.js"],
+                  pgTitle = "Memo pages:" } htmlMatches

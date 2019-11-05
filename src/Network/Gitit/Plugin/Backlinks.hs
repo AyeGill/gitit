@@ -100,7 +100,5 @@ readBacklinks title = do
     let linkList = case decode raw of
             Nothing -> [] :: [(String, [String])]
             Just dat -> Map.toList dat
-    return $ map first $ filter (\(_, links) -> title `elem` links) linkList
+    return $ map fst $ filter (\(_, links) -> title `elem` links) linkList
     
-first :: (a,b) -> a
-first (a,_) = a
